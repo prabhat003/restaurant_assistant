@@ -48,7 +48,7 @@ def get_prompt(context,question):
     return final_prompt
 
 def generate_llama2_response(question):
-    string_dialogue = "You are a helpful assistant. You do not respond as 'User' or pretend to be 'User'."
+    string_dialogue = "You are a helpful assistant. You do not respond as 'User' or pretend to be 'User'. You only respond once as 'Assistant'."
 
     # Query Chromadb for the 10 most similar titles to the user prompt.
     context = db.similarity_search(question, k=10)
