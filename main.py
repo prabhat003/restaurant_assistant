@@ -1,22 +1,10 @@
 
 import os
-import time
-import json
-import cohere
-import replicate
 import pandas as pd
 import streamlit as st
-from fastapi.encoders import jsonable_encoder
-from openai import OpenAI
-from ast import literal_eval
-from langchain.docstore.document import Document
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings import CohereEmbeddings
-
-import json
-import sys
-import chromadb
 import replicate
 
 def create_store_vectors(embedding_function, persist_directory:str, data_file_path:str)->list:
