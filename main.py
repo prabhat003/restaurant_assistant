@@ -8,11 +8,11 @@ from langchain_community.embeddings import CohereEmbeddings
 import replicate
 from dotenv import load_dotenv
 
-__import__('pysqlite3')
-
-import sys
-
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+#
+# import sys
+#
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 def create_store_vectors(embedding_function, persist_directory:str, data_file_path:str)->list:
 
@@ -77,18 +77,18 @@ load_dotenv()
 # Replicate Credentials
 with st.sidebar:
     st.title('🦙💬 Llama 2 Chatbot')
-    # if 'REPLICATE_API_TOKEN' in st.secrets:
-    #     st.success('API key already provided!', icon='✅')
-    #     # replicate_api = st.secrets['REPLICATE_API_TOKEN']
-    #     replicate_api = os.getenv('REPLICATE_KEY')
-    #
-    # else:
-    #     replicate_api = st.text_input('Enter Replicate API token:', type='password')
-    #     if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
-    #         st.warning('Please enter your credentials!', icon='⚠️')
-    #     else:
-    #         st.success('Proceed to entering your prompt message!', icon='👉')
-    #
+    if 'REPLICATE_API_TOKEN' in st.secrets:
+        st.success('API key already provided!', icon='✅')
+        # replicate_api = st.secrets['REPLICATE_API_TOKEN']
+        # replicate_api = os.getenv('REPLICATE_KEY')
+        replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
+    else:
+        replicate_api = st.text_input('Enter Replicate API token:', type='password')
+        if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
+            st.warning('Please enter your credentials!', icon='⚠️')
+        else:
+            st.success('Proceed to entering your prompt message!', icon='👉')
+
     # Refactored from https://github.com/a16z-infra/llama2-chatbot
     st.subheader('Models and parameters')
     selected_model = st.sidebar.selectbox('Choose a Llama2 model', ['Llama2-70B'],
@@ -119,7 +119,7 @@ st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 
 # User-provided prompt
-if prompt := st.chat_input():
+if prompt := st.chat_input(disabled=not replicate_api):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.write(prompt)
