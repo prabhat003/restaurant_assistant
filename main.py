@@ -8,11 +8,12 @@ from langchain_community.embeddings import CohereEmbeddings
 import replicate
 from dotenv import load_dotenv
 
-__import__('pysqlite3')
-
-import sys
-
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+#
+# import sys
+#
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
 
 def create_store_vectors(embedding_function, persist_directory:str, data_file_path:str)->list:
 
@@ -52,7 +53,8 @@ def generate_llama2_response(question):
     # Query Chromadb for the 10 most similar titles to the user prompt.
     context = db.similarity_search(question, k=10)
     prompt = get_prompt(context,question)
-    output = replicate.run("meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",input={"prompt": prompt,
+    api = replicate.Client(api_token=replicate_api)
+    output = api.run("meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",input={"prompt": prompt,
                                     "temperature": temperature,
                                     "top_p": top_p,
                                     "max_length": max_length,
@@ -77,20 +79,19 @@ load_dotenv()
 # Replicate Credentials
 with st.sidebar:
     st.title('🦙💬 Llama 2 Chatbot')
-    replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
 
-    if len(replicate_api)==40:
-        st.success('API key already provided!', icon='✅')
-        # replicate_api = st.secrets['REPLICATE_API_TOKEN']
-        # replicate_api = os.getenv('REPLICATE_KEY')
-        replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
-    else:
-
-        replicate_api = st.text_input('Enter Replicate API token:', type='password')
-        if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
-            st.warning('Please enter your credentials!', icon='⚠️')
-        else:
-            st.success('Proceed to entering your prompt message!', icon='👉')
+    # if len(replicate_api)==40:
+    #     st.success('API key already provided!', icon='✅')
+    #     # replicate_api = st.secrets['REPLICATE_API_TOKEN']
+    #     # replicate_api = os.getenv('REPLICATE_KEY')
+    #     replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
+    # else:
+    #
+    #     replicate_api = st.text_input('Enter Replicate API token:', type='password')
+    #     if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
+    #         st.warning('Please enter your credentials!', icon='⚠️')
+    #     else:
+    #         st.success('Proceed to entering your prompt message!', icon='👉')
 
     # Refactored from https://github.com/a16z-infra/llama2-chatbot
     st.subheader('Models and parameters')
