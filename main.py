@@ -8,11 +8,11 @@ from langchain_community.embeddings import CohereEmbeddings
 import replicate
 from dotenv import load_dotenv
 
-# __import__('pysqlite3')
-#
-# import sys
-#
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+
+import sys
+
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 def create_store_vectors(embedding_function, persist_directory:str, data_file_path:str)->list:
 
