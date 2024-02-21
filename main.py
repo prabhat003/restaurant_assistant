@@ -6,7 +6,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings import CohereEmbeddings
 import replicate
-form dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # __import__('pysqlite3')
 #
