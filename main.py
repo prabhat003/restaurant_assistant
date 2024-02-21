@@ -77,18 +77,18 @@ load_dotenv()
 # Replicate Credentials
 with st.sidebar:
     st.title('🦙💬 Llama 2 Chatbot')
-    if 'REPLICATE_API_TOKEN' in st.secrets:
-        st.success('API key already provided!', icon='✅')
-        # replicate_api = st.secrets['REPLICATE_API_TOKEN']
-        replicate_api = os.getenv('REPLICATE_KEY')
-
-    else:
-        replicate_api = st.text_input('Enter Replicate API token:', type='password')
-        if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
-            st.warning('Please enter your credentials!', icon='⚠️')
-        else:
-            st.success('Proceed to entering your prompt message!', icon='👉')
-
+    # if 'REPLICATE_API_TOKEN' in st.secrets:
+    #     st.success('API key already provided!', icon='✅')
+    #     # replicate_api = st.secrets['REPLICATE_API_TOKEN']
+    #     replicate_api = os.getenv('REPLICATE_KEY')
+    #
+    # else:
+    #     replicate_api = st.text_input('Enter Replicate API token:', type='password')
+    #     if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
+    #         st.warning('Please enter your credentials!', icon='⚠️')
+    #     else:
+    #         st.success('Proceed to entering your prompt message!', icon='👉')
+    #
     # Refactored from https://github.com/a16z-infra/llama2-chatbot
     st.subheader('Models and parameters')
     selected_model = st.sidebar.selectbox('Choose a Llama2 model', ['Llama2-70B'],
@@ -100,7 +100,6 @@ with st.sidebar:
     top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
     max_length = st.sidebar.slider('max_length', min_value=64, max_value=4096, value=512, step=8)
     
-os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
 # Store LLM generated responses
 if "messages" not in st.session_state.keys():
@@ -120,7 +119,7 @@ st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 
 # User-provided prompt
-if prompt := st.chat_input(disabled=not replicate_api):
+if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.write(prompt)
