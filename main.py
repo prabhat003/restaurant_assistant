@@ -77,12 +77,15 @@ load_dotenv()
 # Replicate Credentials
 with st.sidebar:
     st.title('🦙💬 Llama 2 Chatbot')
-    if 'REPLICATE_API_TOKEN' in st.secrets:
+    replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
+
+    if len(replicate_api)==40:
         st.success('API key already provided!', icon='✅')
         # replicate_api = st.secrets['REPLICATE_API_TOKEN']
         # replicate_api = os.getenv('REPLICATE_KEY')
         replicate_api = 'r8_cgkgOim7f8kbOS9QoVaKWEKNVqF5JwP0gpUlV'
     else:
+
         replicate_api = st.text_input('Enter Replicate API token:', type='password')
         if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
             st.warning('Please enter your credentials!', icon='⚠️')
