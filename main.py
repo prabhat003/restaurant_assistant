@@ -6,13 +6,13 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings import CohereEmbeddings
 import replicate
+form dotenv import load_dotenv
 
-
-__import__('pysqlite3')
-
-import sys
-
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+#
+# import sys
+#
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 def create_store_vectors(embedding_function, persist_directory:str, data_file_path:str)->list:
 
@@ -72,12 +72,16 @@ db = Chroma(persist_directory=persist_directory, embedding_function=embedding_fu
 # App title
 st.set_page_config(page_title="🦙💬 Llama 2 Chatbot")
 
+
+load_dotenv()
 # Replicate Credentials
 with st.sidebar:
     st.title('🦙💬 Llama 2 Chatbot')
     if 'REPLICATE_API_TOKEN' in st.secrets:
         st.success('API key already provided!', icon='✅')
-        replicate_api = st.secrets['REPLICATE_API_TOKEN']
+        # replicate_api = st.secrets['REPLICATE_API_TOKEN']
+        replicate_api = os.getenv('REPLICATE_KEY')
+
     else:
         replicate_api = st.text_input('Enter Replicate API token:', type='password')
         if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
